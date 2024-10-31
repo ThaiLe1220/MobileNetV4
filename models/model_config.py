@@ -1,3 +1,4 @@
+# models/model_config.py
 
 MNV4ConvSmall_BLOCK_SPECS = {
     "conv0": {
