@@ -1,0 +1,16 @@
+conda create -n mobilenets python=3.10.12 -y
+
+conda install pytorch pytorch-cuda=11.8 -c pytorch -c nvidia -y
+
+
+pip install --upgrade pip
+pip install transformers timm pillow matplotlib
+
+
+
+
+
+def save_image():
+    test_img_url1 = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/beignets-task-guide.png"
+    test_img1 = Image.open(urlopen(test_img_url1))
+    test_img1.save("images/image11.jpg")
