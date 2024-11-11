@@ -14,3 +14,42 @@ def save_image():
     test_img_url1 = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/beignets-task-guide.png"
     test_img1 = Image.open(urlopen(test_img_url1))
     test_img1.save("images/image11.jpg")
+
+
+python onnx_export.py --model=mobilenetv4_small --output=./mobilenetv4_small.onnx --checkpoint=./output/mobilenetv4_small_best_checkpoint.pth
+
+python onnx_optimise.py --model=mobilenetv4_small --output=./mobilenetv4_small_optim.onnx'
+
+python onnx_validate.py --data_root=/mnt/d/flower_data --onnx-input=./mobilenetv4_small_optim.onnx
+
+
+11/11/24 - continue
+# First remove tf-keras and current tensorflow
+pip uninstall tf-keras tensorflow tensorflow-addons tensorflow-probability onnx onnx-tf -y
+
+pip install tensorflow
+pip install tensorflow-addons
+pip install tf-keras
+pip install tensorflow-probability[tf]
+pip install onnx-tf
+---ERROR---
+
+####
+conda remove -n mobilenet_conversion --all
+conda create -n mobilenet_conversion python=3.10.12
+conda activate mobilenet_conversion
+
+pip install --upgrade pip
+pip install tensorflow==2.13.0 tensorflow-addons==0.22.0
+pip install tf-keras==2.13.0
+
+pip install torch==2.5.0+cu124 torchvision==0.20.0+cu124 torchaudio==2.5.0+cu124 --extra-index-url https://download.pytorch.org/whl/cu124
+pip install timm onnx onnx-tf==1.10.0 tensorflow_probability==0.25.0
+pip check
+
+python -c "import torch; import timm; import onnx; import onnx_tf; import tensorflow as tf; import tensorflow_probability as tfp; print('All imports successful')"
+
+
+pip install tensorflow==2.15.0
+pip install tensorflow-addons==0.23.0
+pip install tensorflow-probability==0.24.0

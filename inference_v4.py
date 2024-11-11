@@ -6,6 +6,7 @@ from PIL import Image
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+import ast
 
 # Print library versions and CUDA status
 print(f"PyTorch version: {torch.__version__}")
@@ -16,16 +17,12 @@ print(f"CUDA available: {torch.cuda.is_available()}")
 if torch.cuda.is_available():
     print(f"CUDA version: {torch.version.cuda}")
 
-# Path to ImageNet class labels
-labels_path = "imagenet1000_clsidx_to_labels.txt"
-if not os.path.exists(labels_path):
-    raise FileNotFoundError(
-        f"Labels file not found at {labels_path}. Please ensure the path is correct."
-    )
-
 # Load ImageNet class labels
-with open(labels_path, encoding="utf-8") as f:
+with open("imagenet1000_clsidx_to_labels.txt", encoding="utf-8") as f:
     image_net_labels = [line.strip() for line in f.readlines()]
+    # labels_dict = ast.literal_eval(f.read())
+
+# image_net_labels = [labels_dict[i] for i in range(len(labels_dict))]
 
 
 def unnormalize(tensor, mean, std):
@@ -74,7 +71,9 @@ def predict_with_ImageNetV4(pil_img):
         pil_img (PIL.Image.Image): Input image as a PIL object
     """
     # Specify the model name
-    model_name = "mobilenetv4_hybrid_medium.ix_e550_r384_in1k"
+    # model_name = "mobilenetv4_conv_aa_large.e230_r448_in12k_ft_in1k" # top1: 84.99, top5: 97.294, param_count: 32.59M, img_size: 544, normal: 131MB, onnx: 130MB
+    # model_name = "mobilenetv4_hybrid_large.ix_e600_r384_in1k" # top1: 84.356, top5: 96.892, param_count: 37.76M, img_size: 448, normal: 152MB
+    model_name = "mobilenetv4_hybrid_medium.ix_e550_r384_in1k"  # top1: 83.394, top5: 96.760, param_count: 11.07M, img_size: 448, normal: 44.7MB
 
     # Load the pretrained MobileNetV4 model from timm
     try:
@@ -123,7 +122,9 @@ def predict_with_ImageNetV4(pil_img):
     for i in range(5):
         idx = top5_class_indices[i]
         if 0 <= idx < len(image_net_labels):
-            label = image_net_labels[idx]
+            # label = image_net_labels[idx]
+            label_line = image_net_labels[idx]
+            label = label_line.split(": ")[1].strip().strip("',")
         else:
             label = "Unknown"
         prob = round(top5_probabilities[i], 2)
